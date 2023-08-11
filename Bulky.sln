@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bulky.Models", "Bulky.Model
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bulky.Utility", "Bulky.Utility\Bulky.Utility.csproj", "{69D92615-B340-4F21-87BC-82443BAA1E99}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DI_Service_Lifetime", "DI_Service_Lifetime\DI_Service_Lifetime.csproj", "{13FEAAA9-9733-4E0C-AF23-098E02A2AE11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{69D92615-B340-4F21-87BC-82443BAA1E99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69D92615-B340-4F21-87BC-82443BAA1E99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69D92615-B340-4F21-87BC-82443BAA1E99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13FEAAA9-9733-4E0C-AF23-098E02A2AE11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13FEAAA9-9733-4E0C-AF23-098E02A2AE11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13FEAAA9-9733-4E0C-AF23-098E02A2AE11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13FEAAA9-9733-4E0C-AF23-098E02A2AE11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
