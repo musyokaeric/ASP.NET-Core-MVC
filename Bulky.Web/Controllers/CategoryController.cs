@@ -8,16 +8,16 @@ namespace Bulky.Web.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ICategoryRepository repository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CategoryController(ICategoryRepository repository)
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            this.repository = repository;
+            this.unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var categories = repository.GetAll();
+            var categories = unitOfWork.Category.GetAll();
             return View(categories);
         }
 
@@ -35,8 +35,8 @@ namespace Bulky.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                repository.Add(category);
-                repository.Save();
+                unitOfWork.Category.Add(category);
+                unitOfWork.Save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
             }
@@ -47,7 +47,7 @@ namespace Bulky.Web.Controllers
         {
             if (id == null || id == 0) return NotFound();
 
-            var category = repository.Get(c => c.Id == id);
+            var category = unitOfWork.Category.Get(c => c.Id == id);
             if (category == null) return NotFound();
 
 
@@ -59,8 +59,8 @@ namespace Bulky.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Update(category);
-                repository.Save();
+                unitOfWork.Category.Update(category);
+                unitOfWork.Save();
                 TempData["success"] = "Category updated successfully";
                 return RedirectToAction("Index");
             }
@@ -71,7 +71,7 @@ namespace Bulky.Web.Controllers
         {
             if (id == null || id == 0) return NotFound();
 
-            var category = repository.Get(c =>c.Id == id);
+            var category = unitOfWork.Category.Get(c =>c.Id == id);
             if (category == null) return NotFound();
 
 
@@ -81,11 +81,11 @@ namespace Bulky.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            var category = repository.Get(c => c.Id == id);
+            var category = unitOfWork.Category.Get(c => c.Id == id);
             if (category == null) return NotFound();
 
-            repository.Remove(category);
-            repository.Save();
+            unitOfWork.Category.Remove(category);
+            unitOfWork.Save();
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }
