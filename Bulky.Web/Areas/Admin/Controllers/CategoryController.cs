@@ -4,8 +4,9 @@ using Bulky.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bulky.Web.Controllers
+namespace Bulky.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -71,7 +72,7 @@ namespace Bulky.Web.Controllers
         {
             if (id == null || id == 0) return NotFound();
 
-            var category = unitOfWork.Category.Get(c =>c.Id == id);
+            var category = unitOfWork.Category.Get(c => c.Id == id);
             if (category == null) return NotFound();
 
 
