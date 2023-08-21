@@ -65,6 +65,17 @@ namespace Bulky.Web.Areas.Admin.Controllers
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(rootPath, @"images\product");
 
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                    {
+                        // delete the old image
+                        var oldImagePath = Path.Combine(rootPath, productVM.Product.ImageUrl.TrimStart('\\'));
+
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
                     using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
                     {
                         file.CopyTo(fileStream);
@@ -72,7 +83,15 @@ namespace Bulky.Web.Areas.Admin.Controllers
                     productVM.Product.ImageUrl = @"images\product\" + fileName;
                 }
 
-                unitOfWork.Product.Add(productVM.Product);
+                if (productVM.Product.Id == 0)
+                {
+                    unitOfWork.Product.Add(productVM.Product);
+                }
+                else
+                {
+                    unitOfWork.Product.Update(productVM.Product);
+                }
+                
                 unitOfWork.Save();
                 TempData["success"] = "Product created successfully";
                 return RedirectToAction("Index");
