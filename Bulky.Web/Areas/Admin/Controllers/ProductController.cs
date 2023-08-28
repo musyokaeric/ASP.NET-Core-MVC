@@ -22,7 +22,7 @@ namespace Bulky.Web.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var products = unitOfWork.Product.GetAll();
+            var products = unitOfWork.Product.GetAll(includeProperties:"Category");
             return View(products);
         }
 

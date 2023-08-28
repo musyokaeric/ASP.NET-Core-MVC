@@ -19,13 +19,41 @@ namespace Bulky.Data.Repository
         {
             this.dbContext = dbContext;
             dbSet = this.dbContext.Set<T>();
+
+            // relational entities / foreign key
+            this.dbContext.Products
+                .Include(p => p.Category);
+                //.Include(p => p.CategoryId);
         }
 
         public void Add(T entity) => dbSet.Add(entity);
 
-        public T Get(Expression<Func<T, bool>> expression) => dbSet.Where(expression).FirstOrDefault();
+        public T Get(Expression<Func<T, bool>> expression, string? includeProperties = null)
+        {
+            IQueryable<T> query = dbSet.Where(expression);
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(property);
+                }
+            }
+            return query.FirstOrDefault();
+        }
 
-        public IEnumerable<T> GetAll() => dbSet.ToList();
+        // Category
+        public IEnumerable<T> GetAll(string? includeProperties = null)
+        {
+            IQueryable<T> query = dbSet;
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(property);
+                }
+            }
+            return query.ToList();
+        }
 
         public void Remove(T entity) => dbSet.Remove(entity);
 
