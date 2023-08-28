@@ -139,6 +139,7 @@ namespace Bulky.Web.Areas.Admin.Controllers
             return Json(new { data = products });
         }
 
+        [HttpDelete]
         public IActionResult Delete(int? id)
         {
             var product = unitOfWork.Product.Get(p => p.Id == id);
