@@ -3,6 +3,8 @@ using Bulky.Data.Repository;
 using Bulky.Data.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Bulky.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +19,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddRazorPages();
 
 // Inject Identity
-builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Inject Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Inject EmailSender
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
