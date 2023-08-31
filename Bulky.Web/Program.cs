@@ -21,6 +21,14 @@ builder.Services.AddRazorPages();
 // Inject Identity
 builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
+// Inject Authorization
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
+
 // Inject Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
