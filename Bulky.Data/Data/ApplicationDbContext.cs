@@ -44,7 +44,7 @@ namespace Bulky.Data.Data
                     Price50=85,
                     Price100=80,
                     CategoryId = 1,
-                    ImageUrl = ""
+                    ImageUrl = "images\\product\\a886ef89-a93f-480b-8407-e0913ddc50b6.jpg"
                 },
                 new Product
                 {
@@ -58,7 +58,7 @@ namespace Bulky.Data.Data
                     Price50 = 25,
                     Price100 = 20,
                     CategoryId = 1,
-                    ImageUrl = ""
+                    ImageUrl = "images\\product\\ccfabe78-ed76-4b30-8617-d36009f39878.jpg"
                 },
                 new Product
                 {
@@ -72,7 +72,7 @@ namespace Bulky.Data.Data
                     Price50 = 40,
                     Price100 = 35,
                     CategoryId = 1,
-                    ImageUrl = ""
+                    ImageUrl = "images\\product\\8f0ef6b7-f119-49f0-b508-ceb738bdfe00.jpg"
                 },
                 new Product
                 {
@@ -86,7 +86,7 @@ namespace Bulky.Data.Data
                     Price50 = 60,
                     Price100 = 55,
                     CategoryId = 2,
-                    ImageUrl = ""
+                    ImageUrl = "images\\product\\97555a95-1ea5-4581-9961-536b6f8dc2d9.jpg"
                 },
                 new Product
                 {
@@ -100,7 +100,7 @@ namespace Bulky.Data.Data
                     Price50 = 25,
                     Price100 = 20,
                     CategoryId = 2,
-                    ImageUrl = ""
+                    ImageUrl = "images\\product\\9b86264a-dc43-45b6-a69b-f89b448c9918.jpg"
                 },
                 new Product
                 {
@@ -114,7 +114,7 @@ namespace Bulky.Data.Data
                     Price50 = 22,
                     Price100 = 20,
                     CategoryId = 3,
-                    ImageUrl = ""
+                    ImageUrl = "images\\product\\05c2d61f-40a7-4098-a661-6de8dee7fa16.jpg"
                 }
             };
 
