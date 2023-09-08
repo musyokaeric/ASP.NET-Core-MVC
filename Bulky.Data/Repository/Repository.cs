@@ -28,9 +28,20 @@ namespace Bulky.Data.Repository
 
         public void Add(T entity) => dbSet.Add(entity);
 
-        public T Get(Expression<Func<T, bool>> expression, string? includeProperties = null)
+        public T Get(Expression<Func<T, bool>> expression, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = dbSet.Where(expression);
+            IQueryable<T> query;
+            if (tracked)
+            {
+                query = dbSet;
+            }
+            else
+            {
+                query=dbSet.AsNoTracking();
+            }
+
+            query = query.Where(expression);
+
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
