@@ -40,6 +40,47 @@ namespace Bulky.Web.Areas.Customer.Controllers
             return View(ShoppingCartVM);
         }
 
+        public IActionResult Summary() 
+        { 
+            return View();
+        }
+
+        public IActionResult Plus(int cartId)
+        {
+            var cart = unitOfWork.ShoppingCart.Get(c => c.Id == cartId);
+            cart.Count += 1;
+            unitOfWork.ShoppingCart.Update(cart);
+            unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Minus(int cartId)
+        {
+            var cart = unitOfWork.ShoppingCart.Get(c => c.Id == cartId);
+            if (cart.Count <= 1)
+            {
+                //remove item from cart
+                unitOfWork.ShoppingCart.Remove(cart);
+            }
+            else
+            {
+                cart.Count -= 1;
+                unitOfWork.ShoppingCart.Update(cart);
+            }
+            unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Remove(int cartId)
+        {
+            var cart = unitOfWork.ShoppingCart.Get(c => c.Id == cartId);
+            unitOfWork.ShoppingCart.Remove(cart);
+            unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
+        }
+
         private double GetPriceBasedOnQuantity(ShoppingCart cart)
         {
             if (cart.Count <= 50)
