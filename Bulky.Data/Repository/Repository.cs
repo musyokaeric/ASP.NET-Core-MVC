@@ -53,16 +53,21 @@ namespace Bulky.Data.Repository
         }
 
         // Category
-        public IEnumerable<T> GetAll(string? includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? expression = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
-            if (!string.IsNullOrEmpty(includeProperties))
+
+            if (expression != null)
             {
-                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                if (!string.IsNullOrEmpty(includeProperties))
                 {
-                    query = query.Include(property);
+                    foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        query = query.Include(property);
+                    }
                 }
             }
+
             return query.ToList();
         }
 
