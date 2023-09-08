@@ -1,7 +1,9 @@
 ﻿using Bulky.Data.Repository.IRepository;
 using Bulky.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Bulky.Web.Areas.Customer.Controllers
 {
@@ -25,8 +27,40 @@ namespace Bulky.Web.Areas.Customer.Controllers
 
         public IActionResult Details(int id)
         {
-            var product = unitOfWork.Product.Get(p => p.Id == id, includeProperties: "Category");
-            return View(product);
+            var cart = new ShoppingCart
+            {
+                Product = unitOfWork.Product.Get(p => p.Id == id, includeProperties: "Category"),
+                Count = 1,
+                ProductId = id
+            };
+            return View(cart);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCart cart)
+        {
+            // Get userId for logged in user
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            cart.ApplicationUserId = userId;
+
+            var cartFromDb = unitOfWork.ShoppingCart.Get(c => c.ApplicationUserId == userId && c.ProductId == cart.ProductId);
+            if (cartFromDb != null)
+            {
+                //Shopping cart item exists
+                cartFromDb.Count += cart.Count;
+                unitOfWork.ShoppingCart.Update(cartFromDb);
+            }
+            else
+            {
+                //Shopping cart item does not exist
+                unitOfWork.ShoppingCart.Add(cart);
+            }
+
+            unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()
