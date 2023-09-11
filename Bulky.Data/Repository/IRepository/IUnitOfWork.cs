@@ -12,6 +12,8 @@ namespace Bulky.Data.Repository.IRepository
         IProductRepository Product { get; }
         ICompanyRepository Company { get; }
         IShoppingCartRepository ShoppingCart { get; }
+        IOrderDetailRepository OrderDetail { get; }
+        IOrderHeaderRepository OrderHeader { get; }
         IApplicationUserRepository ApplicationUser { get; }
         void Save();
     }
