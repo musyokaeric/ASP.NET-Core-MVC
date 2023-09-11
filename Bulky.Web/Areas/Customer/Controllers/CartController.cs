@@ -85,7 +85,8 @@ namespace Bulky.Web.Areas.Customer.Controllers
 
             ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
             ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
-            ShoppingCartVM.OrderHeader.ApplicationUser = unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+
+            var applicationUser = unitOfWork.ApplicationUser.Get(u => u.Id == userId);
 
             foreach (var cart in ShoppingCartVM.CartList)
             {
@@ -95,7 +96,7 @@ namespace Bulky.Web.Areas.Customer.Controllers
 
             // ORDER HEADER
 
-            if (ShoppingCartVM.OrderHeader.ApplicationUser.CompanyId.GetValueOrDefault() == 0)
+            if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
                 // it is a regular customer account
                 ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
@@ -126,7 +127,12 @@ namespace Bulky.Web.Areas.Customer.Controllers
                 unitOfWork.Save();
             }
 
-            return View(ShoppingCartVM);
+            return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
+        }
+
+        public IActionResult OrderConfirmation(int id)
+        { 
+            return View(id);
         }
 
         public IActionResult Plus(int cartId)

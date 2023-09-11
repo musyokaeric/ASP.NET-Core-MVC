@@ -59,12 +59,13 @@ namespace Bulky.Data.Repository
 
             if (expression != null)
             {
-                if (!string.IsNullOrEmpty(includeProperties))
+                query = query.Where(expression);
+            }
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        query = query.Include(property);
-                    }
+                    query = query.Include(property);
                 }
             }
 
