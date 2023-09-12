@@ -1,15 +1,18 @@
 ﻿using Bulky.Data.Repository;
 using Bulky.Data.Repository.IRepository;
+using Bulky.Models;
 using Bulky.Models.ViewModels;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Bulky.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -70,7 +73,19 @@ namespace Bulky.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll(string status)
         {
-            var orderHeaders = unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
+            IEnumerable<OrderHeader> orderHeaders;
+
+            if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+            {
+                orderHeaders = unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
+            }
+            else
+            {
+                var claimsIdentity=(ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                orderHeaders = unitOfWork.OrderHeader.GetAll(o => o.ApplicationUserId == userId, includeProperties: "ApplicationUser");
+            }
 
             switch (status)
             {
