@@ -6,6 +6,7 @@ using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -103,6 +104,37 @@ namespace Bulky.Web.Areas.Admin.Controllers
             TempData["Success"] = "Order Shipped Successfully!";
 
             return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        public IActionResult CancelOrder()
+        {
+            var orderHeader = unitOfWork.OrderHeader.Get(o => o.Id == OrderVM.OrderHeader.Id);
+
+            if (orderHeader.PaymentStatus == SD.PaymentStatusApproved)
+            {
+                var options = new RefundCreateOptions
+                {
+                    Reason = RefundReasons.RequestedByCustomer,
+                    PaymentIntent = orderHeader.PaymentIntentId
+                };
+
+                var service = new RefundService();
+                var refund = service.Create(options);
+
+                unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled, SD.StatusRefunded);
+            }
+            else
+            {
+                unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled, SD.StatusCancelled);
+            }
+
+            unitOfWork.Save();
+
+            TempData["Success"] = "Order Cancelled Successfully!";
+
+            return RedirectToAction(nameof(Details), new { id = orderHeader.Id });
         }
 
         #region API CALLS
