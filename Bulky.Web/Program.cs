@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Bulky.Utility;
 using Stripe;
+using Bulky.Data.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Inject DbInitializer
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
 // Inject Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -76,6 +80,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
+// invoke DbInitializer
+SeedDatabase();
+
 app.MapRazorPages();
 
 app.MapControllerRoute(
@@ -83,3 +90,12 @@ app.MapControllerRoute(
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}
