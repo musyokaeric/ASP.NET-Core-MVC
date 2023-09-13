@@ -50,10 +50,28 @@ namespace Bulky.Web.Areas.Admin.Controllers
             return Json(new { data = users });
         }
 
-        [HttpDelete]
-        public IActionResult Delete(int? id)
+        [HttpPost]
+        public IActionResult LockUnlock([FromBody] string id)
         {
-            return Json(new { success = true, message = "Delete successfull" });
+            var user = dbContext.applicationUsers.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return Json(new { success = false, message = "Error while Locking/Unlocking" });
+            }
+
+            if (user.LockoutEnd != null && user.LockoutEnd > DateTime.Now)
+            {
+                // unlock user
+                user.LockoutEnd = DateTime.Now;
+            }
+            else
+            {
+                // lock user
+                user.LockoutEnd = DateTime.Now.AddYears(1000);
+            }
+            dbContext.SaveChanges();
+
+            return Json(new { success = true, message = "Lock/Unlock successfull" });
         }
 
         #endregion
