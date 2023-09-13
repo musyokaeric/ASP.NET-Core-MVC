@@ -147,7 +147,7 @@ namespace Bulky.Web.Areas.Admin.Controllers
 
             // CAPTURE PAYMENT USING STRIPE FOR A COMPANY
             // https://stripe.com/docs/api/checkout/sessions/create?lang=dotnet
-            var domain = "https://localhost:7022/";
+            var domain = Request.Scheme + "://" + Request.Host.Value + "/";
             var options = new SessionCreateOptions
             {
                 SuccessUrl = domain + $"admin/order/PaymentConfirmation?id={OrderVM.OrderHeader.Id}",
